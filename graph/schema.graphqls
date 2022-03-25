@@ -1,0 +1,45 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+directive @authGuard on FIELD_DEFINITION
+
+type Viewer {
+  id: ID!
+  email: String
+  sites: [Sites]
+}
+
+type Query {
+  viewer: Viewer  @authGuard
+}
+
+type Sites {
+  id: ID!
+  host: String
+}
+
+type Mutation {
+  users: UsersMutation
+}
+
+type UsersMutation {
+  login(input: LoginInput): Logged
+  logout(refreshToken: String!): Boolean
+  refresh(refreshToken: String!): Token
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type Logged {
+  viewer: Viewer
+  token: Token
+}
+
+type Token {
+  accessToken: String
+  refreshToken: String
+}
